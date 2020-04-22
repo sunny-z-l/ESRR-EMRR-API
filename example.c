@@ -103,10 +103,10 @@ void main()
 	char coll_det_region_index = 0;         //设置碰撞区域编号为0
 	char coll_det_region_mode = 0;	        //设置四边形碰撞区域
 	char coll_det_send_to_radar_sign = 0;   //发送给雷达的CAN消息标记：第一帧
-	float region_1 = -10.0;                //凸四边形碰撞区域第一点x坐标
+	float region_1 = -10.0;                 //凸四边形碰撞区域第一点x坐标
 	float region_2 = 10.0;                  //凸四边形碰撞区域第一点y坐标
-	float region_3 = 10.0;					//凸四边形碰撞区域第二点x坐标
-	float region_4 = 10.0;					//凸四边形碰撞区域第二点y坐标
+	float region_3 = 10.0;			//凸四边形碰撞区域第二点x坐标
+	float region_4 = 10.0;			//凸四边形碰撞区域第二点y坐标
 	float coll_det_region_time = 3.5;       //目标需要在碰撞区域存在的时间大于3.5S，触发报警
 	set_coll_det_region(new_id, coll_det_region_hsd_sel, coll_det_region_index, coll_det_region_mode, coll_det_send_to_radar_sign,
 		region_1, region_2, region_3, region_4, coll_det_region_time);   //设置碰撞检测区域的第一帧消息
@@ -123,8 +123,8 @@ void main()
 	coll_det_send_to_radar_sign = 1;    //发送给雷达的CAN消息标记：第二帧
 	region_1 = 10.0;                    //凸四边形碰撞区域第三点x坐标
 	region_2 = 20.0;                    //凸四边形碰撞区域第三点y坐标
-	region_3 = -10.0;					//凸四边形碰撞区域第四点x坐标
-	region_4 = 20.0;					//凸四边形碰撞区域第四点y坐标
+	region_3 = -10.0;		    //凸四边形碰撞区域第四点x坐标
+	region_4 = 20.0;		    //凸四边形碰撞区域第四点y坐标
 	coll_det_region_time = 1.0;         //目标需要在碰撞区域存在的时间大于1S，触发报警
 
 	set_coll_det_region(new_id, coll_det_region_hsd_sel, coll_det_region_index, coll_det_region_mode, coll_det_send_to_radar_sign,
@@ -140,12 +140,12 @@ void main()
 	}
 
 	/********************************   高边驱动器输出设置   ******************************/
-	char hsd = 1;               //设置高边驱动器1
+	char hsd = 1;                   //设置高边驱动器1
 	char hsd_vout = 0xf;		//设置输出电压100%
-	float hsd_on_time = 1;      //0.25S ON
+	float hsd_on_time = 1;          //0.25S ON
 	float hsd_off_time = 1;		//0.25S OFF
-	char hsd_cycles = 5;      //连续输出5个周期
-	float hsd_overload = 0.75;    //平均电流大于0.75A时，高边驱动器关闭输出
+	char hsd_cycles = 5;            //连续输出5个周期
+	float hsd_overload = 0.75;      //平均电流大于0.75A时，高边驱动器关闭输出
 	set_radar_hsd(new_id, hsd, hsd_vout, hsd_on_time,  hsd_off_time, hsd_cycles, hsd_overload);
 
 	if (can_transmit_data.send_flag == 1)
@@ -183,7 +183,7 @@ void main()
 		receive_radar_can_msg(can_receive_data.can_id, can_receive_data.can_data);  //解析目标头帧
 
 		if (raw_det_list.update_flag == 1)               // 每遇到一个头析头帧时查看目标列表update_flag是否=1时，表示上一个周期目标全部解析完成,
-		{											     //最后一个周期无下一个头帧，update_flag不更新
+		{						 //最后一个周期无下一个头帧，update_flag不更新
 			printf("target_num = %d\n", raw_det_list.raw_det_num);
 			printf("range = ");
 			for (int i = 0; i < raw_det_list.raw_det_num; i++)
