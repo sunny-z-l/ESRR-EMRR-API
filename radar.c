@@ -18,7 +18,7 @@ unsigned short int tempData;  //临时数据
 
 //原始目标头帧信息临时存放列表
 typedef struct{
-	unsigned char raw_det_num;	     //检测目标数
+	unsigned char raw_det_num;		     //检测目标数
 	unsigned char raw_det_meas_mode;     //测量模式
 	int raw_det_meas_counter;            //测量次数
 	int raw_det_time_stamp;              //时间戳
@@ -31,8 +31,8 @@ Tmp_Org_Msg_T tmp_raw_list;
 
 //跟踪目标头帧信息临时存放列表
 typedef struct{
-	unsigned char object_num;             //目标数
-	int object_meas_counter;              //测量次数
+	unsigned char object_num;               //目标数
+	int object_meas_counter;               //测量次数
 	int object_time_stamp;                //时间戳
 
 }Tmp_Track_Msg_T;
@@ -75,22 +75,22 @@ void receive_radar_can_msg(int can_id, unsigned char *can_data)
 		raw_det_list.raw_det_meas_mode = tmp_raw_list.raw_det_meas_mode;
 		raw_det_list.raw_det_time_stamp = tmp_raw_list.raw_det_time_stamp;
 
-		raw_det_list.raw_tar_msg.org_id[org_tar_num] = can_data[0];
+		raw_det_list.target[org_tar_num].org_id = can_data[0];
 
 		tempData = ((uint16_t)(can_data[2] & 0xF0)) >> 4 | ((uint16_t)(can_data[1] & 0xFF)) << 4;
-		raw_det_list.raw_tar_msg.range[org_tar_num] = ((float)tempData)* 0.1f;
+		raw_det_list.target[org_tar_num].range = ((float)tempData)* 0.1f;
 
 		tempData = ((uint16_t)(can_data[3] & 0xFF)) >> 0 | ((uint16_t)(can_data[2] & 0x07)) << 8;
-		raw_det_list.raw_tar_msg.speed[org_tar_num] = ((float)tempData)* 0.1f - 102.4f;
+		raw_det_list.target[org_tar_num].speed = ((float)tempData)* 0.1f - 102.4f;
 
 		tempData = ((uint16_t)(can_data[5] & 0xF0)) >> 4 | ((uint16_t)(can_data[4] & 0x7F)) << 4;
-		raw_det_list.raw_tar_msg.angle[org_tar_num] = ((float)tempData)* 0.1f - 102.4;
+		raw_det_list.target[org_tar_num].angle = ((float)tempData)* 0.1f - 102.4;
 
 		tempData = can_data[6] & 0xFF;
-		raw_det_list.raw_tar_msg.level[org_tar_num] = ((float)tempData)* 0.5f - 64.0f;
+		raw_det_list.target[org_tar_num].level = ((float)tempData)* 0.5f - 64.0f;
 
 		tempData = can_data[7] & 0xFF;
-		raw_det_list.raw_tar_msg.snr[org_tar_num] = ((float)tempData)*1.0f;
+		raw_det_list.target[org_tar_num].snr = ((float)tempData)*1.0f;
 
 		org_tar_num++;
 
@@ -129,29 +129,29 @@ void receive_radar_can_msg(int can_id, unsigned char *can_data)
 		object_list.object_time_stamp = tmp_object_list.object_time_stamp;
 
 		//解析目标信息
-		object_list.track_tar_msg.tar_id[track_tar_num] = can_data[0];
+		object_list.target[track_tar_num].tar_id = can_data[0];
 
 		tempData = ((uint16_t)(can_data[2] & 0xF0)) >> 4 | ((uint16_t)(can_data[1] & 0xFF)) << 4;
-		object_list.track_tar_msg.x[track_tar_num] = ((float)tempData)* 0.1f - 204.8f;
+		object_list.target[track_tar_num].x = ((float)tempData)* 0.1f - 204.8f;
 
 		tempData = ((uint16_t)(can_data[3] & 0xFF)) >> 0 | ((uint16_t)(can_data[2] & 0x0F)) << 8;
 			
-		object_list.track_tar_msg.y[track_tar_num] = ((float)tempData) * 0.1f;
+		object_list.target[track_tar_num].y = ((float)tempData) * 0.1f;
 
 		tempData = ((uint16_t)(can_data[5] & 0xE0)) >> 5 | ((uint16_t)(can_data[4] & 0xFF)) << 3;
-		object_list.track_tar_msg.Vx[track_tar_num] = ((float)tempData)*0.1f - 102.4f;
+		object_list.target[track_tar_num].Vx = ((float)tempData)*0.1f - 102.4f;
 
 		tempData = ((uint16_t)(can_data[6] & 0xFF)) >> 0 | ((uint16_t)(can_data[5] & 0x07)) << 8;
-		object_list.track_tar_msg.Vy[track_tar_num] = ((float)tempData)*0.1f - 102.4f;
+		object_list.target[track_tar_num].Vy = ((float)tempData)*0.1f - 102.4f;
 
 		tempData = (uint16_t)(can_data[7] & 0xFF);
-		object_list.track_tar_msg.rcs[track_tar_num] = ((float)tempData)* 0.5f - 64.0f;
+		object_list.target[track_tar_num].rcs = ((float)tempData)* 0.5f - 64.0f;
 
-		object_list.track_tar_msg.obj_dynpropr[track_tar_num] = ((uint16_t)(can_data[5] & 0x18)) >> 3;
+		object_list.target[track_tar_num].obj_dynpropr = ((uint16_t)(can_data[5] & 0x18)) >> 3;
 
 		track_tar_num++;
 
-		object_list.update_flag = 0; //解析目标时，将列表跟新标志清零，表示正在解析目标
+		object_list.update_flag = 0;//解析目标时，将列表跟新标志清零，表示正在解析目标
 	}
 
 	//跟踪目标报警信息
@@ -322,7 +322,7 @@ void set_radar_filter(char radar_id,char filter_cfg_type, char filter_mode, char
 	{
 		can_transmit_data.can_id = 0x402 + radar_id * 16;  //发送ID
 		can_transmit_data.can_data[0] = (filter_mode & 0x01) | ((1 & 0x01) << 1) | ((1 & 0x1) << 2) 
-						| ((filter_cfg_index & 0x0f) << 3) | ((filter_cfg_type & 0x01) << 7);
+										| ((filter_cfg_index & 0x0f) << 3) | ((filter_cfg_type & 0x01) << 7);
 		can_transmit_data.can_data[1] = ((int)(filter_value_min)& 0xF00) >> 8;
 		can_transmit_data.can_data[2] = ((int)(filter_value_min)& 0xFF);
 		can_transmit_data.can_data[3] = ((int)(filter_value_max)& 0xF00) >> 8;
@@ -509,4 +509,5 @@ void set_save(int radar_id,char en)
 		can_transmit_data.send_flag = 1;
 	}
 }
+
 
