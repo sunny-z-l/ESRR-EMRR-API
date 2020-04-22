@@ -1,5 +1,4 @@
 
-
 /*
 雷达接口函数主要分为两类：
 （1）解析雷达数据，雷达是通过CAN向外发送数据的，CAN消息有四类（原始目标信息、跟踪目标信息，状态信息，版本信息），具体详细解释用户可参阅ESRR/EMRR使用说明
@@ -14,13 +13,11 @@
 #ifndef RADARH
 #define RADARH
 
-
 #define USE_RAW_DET_LIST          1  //使用原始目标
 #define USE_OBJECT_LIST           1  //使用跟踪目标
 #define USE_RADAR_STATE           1  //读取雷达状态
 #define USE_RADAR_VERSION         1  //读取雷达版本
 #define USE_RADAR_SET			  1  //使用雷达设置
-
 
 //原始目标信息列表
 typedef struct{
@@ -105,7 +102,6 @@ typedef struct
 	unsigned char send_flag;  // =1表示设置正常，可以发送，=0表示未设置，=-1表示设置有错误
 
 }Radar_Set_T;
-
 
 
 //雷达数据解析,用于解析雷达CAN消息，包括原始目标解析、跟踪目标解析、雷达状态、雷达软硬件版本
@@ -230,5 +226,4 @@ extern Radar_Version_T radar_version;
 #if USE_RADAR_SET
 extern Radar_Set_T can_transmit_data;
 #endif
-
 #endif
