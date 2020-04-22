@@ -280,8 +280,8 @@ void set_radar_filter(char radar_id,char filter_cfg_type, char filter_mode, char
 
 		//case 6:按信噪比过滤
 	case 6:
-		filter_value_min = filter_value_min * 80;
-		filter_value_max = filter_value_max * 80;
+		filter_value_min = filter_value_min * 40;
+		filter_value_max = filter_value_max * 40;
 		break;
 
 		//case 7:按X坐标过滤过滤
