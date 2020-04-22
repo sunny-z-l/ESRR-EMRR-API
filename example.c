@@ -1,5 +1,4 @@
 
-
 /*
 当用户第一次拿到易来达雷达时，雷达出厂默认统一设置为：0号位，跟踪目标输出，其他设置均无。
 
@@ -140,12 +139,12 @@ void main()
 	}
 
 	/********************************   高边驱动器输出设置   ******************************/
-	char hsd = 1;                   //设置高边驱动器1
-	char hsd_vout = 0xf;		//设置输出电压100%
-	float hsd_on_time = 1;          //0.25S ON
-	float hsd_off_time = 1;		//0.25S OFF
-	char hsd_cycles = 5;            //连续输出5个周期
-	float hsd_overload = 0.75;      //平均电流大于0.75A时，高边驱动器关闭输出
+	char hsd = 1;               //设置高边驱动器1
+	char hsd_vout = 0xf;	    //设置输出电压100%
+	float hsd_on_time = 1;      //0.25S ON
+	float hsd_off_time = 1;	    //0.25S OFF
+	char hsd_cycles = 5;        //连续输出5个周期
+	float hsd_overload = 0.75;  //平均电流大于0.75A时，高边驱动器关闭输出
 	set_radar_hsd(new_id, hsd, hsd_vout, hsd_on_time,  hsd_off_time, hsd_cycles, hsd_overload);
 
 	if (can_transmit_data.send_flag == 1)
@@ -188,7 +187,7 @@ void main()
 			printf("range = ");
 			for (int i = 0; i < raw_det_list.raw_det_num; i++)
 			{
-				printf(" %.2f,", raw_det_list.raw_tar_msg.range[i]);  //取目标的距离信息
+				printf(" %.2f,", raw_det_list.target[i].range);  //取目标的距离信息
 			}
 			printf("\n");
 		}
@@ -202,7 +201,6 @@ void main()
 
 		i++;		
 	}
-
 
 	/********************************   清除雷达设置   ******************************/
 
@@ -264,10 +262,14 @@ void main()
 	{
 		printf("error...\n");	//当参数设置不符合规范时报错（如：超出最大设置范围）
 	}
-
 	printf("end\n");
 	system("pause");
 
 }
+
+
+
+
+
 
 
