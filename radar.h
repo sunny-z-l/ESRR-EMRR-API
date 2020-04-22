@@ -17,7 +17,7 @@
 #define USE_OBJECT_LIST           1  //使用跟踪目标
 #define USE_RADAR_STATE           1  //读取雷达状态
 #define USE_RADAR_VERSION         1  //读取雷达版本
-#define USE_RADAR_SET			  1  //使用雷达设置
+#define USE_RADAR_SET		  1  //使用雷达设置
 
 #define MAX_TARGET_NUM 128
 
@@ -26,17 +26,17 @@ typedef struct{
 	float range;                   //距离
 	float angle;                   //角度
 	float speed;                   //速度
-	float level;	                //幅度
+	float level;	               //幅度
 	float snr;                     //信噪比
 }raw_tar_msg_t;
 
 //原始目标信息列表
 typedef struct{
 	unsigned char update_flag;           // 目标列表更新标志 =1表示一帧目标接收正常，=0表示一帧目标没有完全接收，=-1表示该帧接收有错误
-	unsigned char raw_det_num;		    //一帧检测到的目标数
-	unsigned char raw_det_meas_mode;    //测量模式
-	int raw_det_meas_counter;           //测量次数
-	int raw_det_time_stamp;             //原始目标时间戳
+	unsigned char raw_det_num;	     //一个周期检测到的目标数
+	unsigned char raw_det_meas_mode;     //测量模式
+	int raw_det_meas_counter;            //测量次数
+	int raw_det_time_stamp;              //原始目标时间戳
 	raw_tar_msg_t target[MAX_TARGET_NUM];//目标信息
 }RAW_DET_LIST_T;
 
@@ -46,43 +46,43 @@ typedef struct{
 	float x;                       //水平距离
 	float y;                       //垂直距离
 	float Vx;                      //X方向速度
-	float Vy;	                    //Y方向速度 //再增加结构体
+	float Vy;	               //Y方向速度 
 	float rcs;                     //目标RCS
 	float obj_dynpropr;            //目标运动属性
 }track_tar_msg_t;
 //跟踪目标信息列表
 typedef struct {
-	unsigned char update_flag;            // 目标列表更新标志 =1表示一帧目标接收正常，=0表示一帧目标没有完全接收，=-1表示该帧接收有错误
-	unsigned char object_num;            //目标数
-	int object_meas_counter;            //测量次数
-	int object_time_stamp;             //跟踪目标时间戳
-	track_tar_msg_t target[MAX_TARGET_NUM];//目标信息
+	unsigned char update_flag;              // 目标列表更新标志 =1表示一帧目标接收正常，=0表示一帧目标没有完全接收，=-1表示该帧接收有错误
+	unsigned char object_num;               //目标数
+	int object_meas_counter;                //测量次数
+	int object_time_stamp;                  //跟踪目标时间戳
+	track_tar_msg_t target[MAX_TARGET_NUM]; //目标信息
 	unsigned char obj_warrning[2];		//跟踪目标报警信息（obj_warrning[0] = 报警目标的ID, obj_warrning[1]报警目标位于哪个区域），设置碰撞检测时才有效
 }OBJECT_LIST_T;
 
 //雷达状态信息
 typedef struct {
 	unsigned char radar_state_work_mode;            //雷达当前工作模式(0X0：正常模式,0X1：高分辨模式)
-	unsigned char radar_state_id;					//雷达ID(0--7)
-	unsigned char radar_state_fail;					//(0X0: 雷达工作正常,0X1: 雷达处于失效状态)
-	unsigned char radar_state_temporary_error;		//0X0: 雷达临时故障
-	unsigned char radar_state_eeprom_error;			//0X0：无故障,0X1：读错误,0X2：写错误,0X3：读写错误
+	unsigned char radar_state_id;			//雷达ID(0--7)
+	unsigned char radar_state_fail;			//(0X0: 雷达工作正常,0X1: 雷达处于失效状态)
+	unsigned char radar_state_temporary_error;	//0X0: 雷达临时故障
+	unsigned char radar_state_eeprom_error;		//0X0：无故障,0X1：读错误,0X2：写错误,0X3：读写错误
 	unsigned char radar_state_transceiver_error;	//0X0：无故障,0X1：发射机故障,0X2：接收机故障,0X3：收发机故障
-	unsigned char radar_state_voltage_error;		//0x0：无故障,0x1：欠压故障, VBAT<9V,0x2：过压故障, VBAT>36
+	unsigned char radar_state_voltage_error;	//0x0：无故障,0x1：欠压故障, VBAT<9V,0x2：过压故障, VBAT>36
 	unsigned char radar_state_temperature_error;	//0x0: 无故障,0x1：低温故障	,0x2:  高温故障
-	unsigned char radar_state_outtype;				//雷达输出目标类型(0x0：不输出,0x1：原始目标,0x2：跟踪目标)
-	unsigned char radar_state_send_quality;			//雷达是否输出目标质量信息(0x0：不输出,0x1：输出)
-	unsigned char radar_state_send_ext;				//雷达是否输出跟踪目标的扩展信息(0x0：不输出,0x1：输出)
-	unsigned char radar_state_sort_index;			//雷达输出跟踪目标时的排序方式(0x0: 不排序,0x1 : 按距离排序(升序),0x2 : 按RCS排序(降序))
-	unsigned char radar_state_motion_rx_state;		//雷达接收车速横摆消息故障(0x0: 正常,0x1 : 无车速,0x2 : 无横摆,0x3 : 无车速无横摆)
+	unsigned char radar_state_outtype;		//雷达输出目标类型(0x0：不输出,0x1：原始目标,0x2：跟踪目标)
+	unsigned char radar_state_send_quality;		//雷达是否输出目标质量信息(0x0：不输出,0x1：输出)
+	unsigned char radar_state_send_ext;		//雷达是否输出跟踪目标的扩展信息(0x0：不输出,0x1：输出)
+	unsigned char radar_state_sort_index;		//雷达输出跟踪目标时的排序方式(0x0: 不排序,0x1 : 按距离排序(升序),0x2 : 按RCS排序(降序))
+	unsigned char radar_state_motion_rx_state;	//雷达接收车速横摆消息故障(0x0: 正常,0x1 : 无车速,0x2 : 无横摆,0x3 : 无车速无横摆)
 }Radar_State_T;
 
 
 //雷达软硬件版本信息
 typedef struct {
-	int release_year;					//发布时间: 年
+	int release_year;			//发布时间: 年
 	unsigned char release_month;		//发布时间：月
-	unsigned char release_day;			//发布时间：日
+	unsigned char release_day;		//发布时间：日
 
 	unsigned char software_major;		//软件主版本号
 	unsigned char software_minor;		//软件次版本号
