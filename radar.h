@@ -1,4 +1,3 @@
-
 /*
 雷达接口函数主要分为两类：
 （1）解析雷达数据，雷达是通过CAN向外发送数据的，CAN消息有四类（原始目标信息、跟踪目标信息，状态信息，版本信息），具体详细解释用户可参阅ESRR/EMRR使用说明
@@ -13,51 +12,51 @@
 #ifndef RADARH
 #define RADARH
 
+
 #define USE_RAW_DET_LIST          1  //使用原始目标
 #define USE_OBJECT_LIST           1  //使用跟踪目标
 #define USE_RADAR_STATE           1  //读取雷达状态
 #define USE_RADAR_VERSION         1  //读取雷达版本
 #define USE_RADAR_SET			  1  //使用雷达设置
 
+#define MAX_TARGET_NUM 128
+
+typedef struct{
+	unsigned char org_id;           //目标ID
+	float range;                   //距离
+	float angle;                   //角度
+	float speed;                   //速度
+	float level;	                //幅度
+	float snr;                     //信噪比
+}raw_tar_msg_t;
+
 //原始目标信息列表
 typedef struct{
-
 	unsigned char update_flag;           // 目标列表更新标志 =1表示一帧目标接收正常，=0表示一帧目标没有完全接收，=-1表示该帧接收有错误
 	unsigned char raw_det_num;		    //一帧检测到的目标数
 	unsigned char raw_det_meas_mode;    //测量模式
 	int raw_det_meas_counter;           //测量次数
 	int raw_det_time_stamp;             //原始目标时间戳
-
-	struct{
-		unsigned char org_id[128];           //目标ID
-		float range[128];                   //距离
-		float angle[128];                   //角度
-		float speed[128];                   //速度
-		float level[128];	                //幅度
-		float snr[128];                     //信噪比
-	}raw_tar_msg;
-
+	raw_tar_msg_t target[MAX_TARGET_NUM];//目标信息
 }RAW_DET_LIST_T;
 
 
+typedef struct{
+	unsigned char tar_id;          //目标ID
+	float x;                       //水平距离
+	float y;                       //垂直距离
+	float Vx;                      //X方向速度
+	float Vy;	                    //Y方向速度 //再增加结构体
+	float rcs;                     //目标RCS
+	float obj_dynpropr;            //目标运动属性
+}track_tar_msg_t;
 //跟踪目标信息列表
 typedef struct {
-
 	unsigned char update_flag;            // 目标列表更新标志 =1表示一帧目标接收正常，=0表示一帧目标没有完全接收，=-1表示该帧接收有错误
 	unsigned char object_num;            //目标数
 	int object_meas_counter;            //测量次数
 	int object_time_stamp;             //跟踪目标时间戳
-
-	struct{
-		unsigned char tar_id[128];          //目标ID
-		float x[128];                       //水平距离
-		float y[128];                       //垂直距离
-		float Vx[128];                      //X方向速度
-		float Vy[128];	                    //Y方向速度 //再增加结构体
-		float rcs[128];                     //目标RCS
-		float obj_dynpropr[128];            //目标运动属性
-	}track_tar_msg;
-
+	track_tar_msg_t target[MAX_TARGET_NUM];//目标信息
 	unsigned char obj_warrning[2];		//跟踪目标报警信息（obj_warrning[0] = 报警目标的ID, obj_warrning[1]报警目标位于哪个区域），设置碰撞检测时才有效
 }OBJECT_LIST_T;
 
@@ -76,7 +75,6 @@ typedef struct {
 	unsigned char radar_state_send_ext;				//雷达是否输出跟踪目标的扩展信息(0x0：不输出,0x1：输出)
 	unsigned char radar_state_sort_index;			//雷达输出跟踪目标时的排序方式(0x0: 不排序,0x1 : 按距离排序(升序),0x2 : 按RCS排序(降序))
 	unsigned char radar_state_motion_rx_state;		//雷达接收车速横摆消息故障(0x0: 正常,0x1 : 无车速,0x2 : 无横摆,0x3 : 无车速无横摆)
-
 }Radar_State_T;
 
 
@@ -94,20 +92,17 @@ typedef struct {
 
 
 //配置雷达时发送给雷达的CAN消息
-typedef struct
-{
+typedef struct{
 	int can_id;
 	int can_dlc;
 	unsigned char can_data[8];
 	unsigned char send_flag;  // =1表示设置正常，可以发送，=0表示未设置，=-1表示设置有错误
-
 }Radar_Set_T;
 
 
 //雷达数据解析,用于解析雷达CAN消息，包括原始目标解析、跟踪目标解析、雷达状态、雷达软硬件版本
 void receive_radar_can_msg(int can_id, unsigned char can_data[8]);
 //函数参数说明：can_id: 雷达发出CAN消息ID,can_data:雷达发出的CAN消息数据,
-
 
 //雷达位号设置（0--7）
 void set_radar_id(char radar_id, char new_id);
@@ -227,3 +222,4 @@ extern Radar_Version_T radar_version;
 extern Radar_Set_T can_transmit_data;
 #endif
 #endif
+
