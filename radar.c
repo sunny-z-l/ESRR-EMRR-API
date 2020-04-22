@@ -18,7 +18,7 @@ unsigned short int tempData;  //临时数据
 
 //原始目标头帧信息临时存放列表
 typedef struct{
-	unsigned char raw_det_num;		     //检测目标数
+	unsigned char raw_det_num;	     //检测目标数
 	unsigned char raw_det_meas_mode;     //测量模式
 	int raw_det_meas_counter;            //测量次数
 	int raw_det_time_stamp;              //时间戳
@@ -31,8 +31,8 @@ Tmp_Org_Msg_T tmp_raw_list;
 
 //跟踪目标头帧信息临时存放列表
 typedef struct{
-	unsigned char object_num;               //目标数
-	int object_meas_counter;               //测量次数
+	unsigned char object_num;             //目标数
+	int object_meas_counter;              //测量次数
 	int object_time_stamp;                //时间戳
 
 }Tmp_Track_Msg_T;
@@ -151,7 +151,7 @@ void receive_radar_can_msg(int can_id, unsigned char *can_data)
 
 		track_tar_num++;
 
-		object_list.update_flag = 0;//解析目标时，将列表跟新标志清零，表示正在解析目标
+		object_list.update_flag = 0; //解析目标时，将列表跟新标志清零，表示正在解析目标
 	}
 
 	//跟踪目标报警信息
@@ -322,7 +322,7 @@ void set_radar_filter(char radar_id,char filter_cfg_type, char filter_mode, char
 	{
 		can_transmit_data.can_id = 0x402 + radar_id * 16;  //发送ID
 		can_transmit_data.can_data[0] = (filter_mode & 0x01) | ((1 & 0x01) << 1) | ((1 & 0x1) << 2) 
-										| ((filter_cfg_index & 0x0f) << 3) | ((filter_cfg_type & 0x01) << 7);
+						| ((filter_cfg_index & 0x0f) << 3) | ((filter_cfg_type & 0x01) << 7);
 		can_transmit_data.can_data[1] = ((int)(filter_value_min)& 0xF00) >> 8;
 		can_transmit_data.can_data[2] = ((int)(filter_value_min)& 0xFF);
 		can_transmit_data.can_data[3] = ((int)(filter_value_max)& 0xF00) >> 8;
